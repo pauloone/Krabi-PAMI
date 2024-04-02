@@ -134,6 +134,9 @@ void interrupt_init(void){
 	hext_a7_config.GPIOSel = EXTI_GPIOA;
 	HAL_EXTI_GetHandle(&hext_a7, EXTI_LINE_7);
 	HAL_EXTI_SetConfigLine(&hext_a7, &hext_a7_config);
+	HAL_EXTI_RegisterCallback(&hext_a7, HAL_EXTI_COMMON_CB_ID, &RUN_interrupt);
+	HAL_NVIC_SetPriority(EXTI4_15_IRQn, 3, 0);
+	HAL_NVIC_EnableIRQ(EXTI4_15_IRQn);
 }
 
 /**
