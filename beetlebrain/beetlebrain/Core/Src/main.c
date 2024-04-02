@@ -66,6 +66,7 @@ static void MX_I2C1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_RTC_Init(void);
 /* USER CODE BEGIN PFP */
+static void interrupt_init(void);
 
 /* USER CODE END PFP */
 
@@ -109,6 +110,8 @@ int main(void)
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
 
+  interrupt_init();
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -120,6 +123,17 @@ int main(void)
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
+}
+
+void interrupt_init(void){
+	EXTI_ConfigTypeDef hext_a7_config = {0};
+	EXTI_HandleTypeDef hext_a7 = {0};
+	hext_a7_config.Line = EXTI_LINE_7;
+	hext_a7_config.Mode = EXTI_MODE_INTERRUPT;
+	hext_a7_config.Trigger = EXTI_TRIGGER_RISING_FALLING;
+	hext_a7_config.GPIOSel = EXTI_GPIOA;
+	HAL_EXTI_GetHandle(&hext_a7, EXTI_LINE_7);
+	HAL_EXTI_SetConfigLine(&hext_a7, &hext_a7_config);
 }
 
 /**
