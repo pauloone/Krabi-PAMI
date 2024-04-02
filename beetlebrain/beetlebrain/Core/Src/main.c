@@ -216,6 +216,7 @@ static void MX_ADC_Init(void)
     Error_Handler();
   }
 
+
   /** Configure for the selected ADC regular channel to be converted.
   */
   sConfig.Channel = ADC_CHANNEL_5;
@@ -234,6 +235,17 @@ static void MX_ADC_Init(void)
   }
   /* USER CODE BEGIN ADC_Init 2 */
 
+  if (HAL_ADCEx_Calibration_Start(&hadc, ADC_SINGLE_ENDED) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  static uint32_t adc_result = 0;
+
+  if (HAL_ADC_Start_DMA(&hadc, &adc_result, 1) != HAL_OK)
+  {
+    Error_Handler();
+  }
   /* USER CODE END ADC_Init 2 */
 
 }
