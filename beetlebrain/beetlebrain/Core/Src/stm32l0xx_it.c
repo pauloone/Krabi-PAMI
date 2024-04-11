@@ -19,6 +19,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "fixed_point.h"
 #include "stm32l0xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -51,16 +52,25 @@
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_adc;
 extern DMA_HandleTypeDef hdma_i2c1_rx;
 extern DMA_HandleTypeDef hdma_i2c1_tx;
-extern DMA_HandleTypeDef hdma_tim2_ch1;
-extern DMA_HandleTypeDef hdma_tim2_ch2;
+extern const volatile adc_values_type adc_values;
 /* USER CODE BEGIN EV */
+
+#define PID_A FP32_19_FLOAT_TO_FP(KI*DT + KP)
+#define PID_B FP32_19_FLOAT_TO_FP(-KP)
+#define OUTPUT_SAT FP32_19_INT_TO_FP(PWM_PERIOD)
+#define FP_ADC_TARGET FP32_19_INT_TO_FP(ADC_TARGET)
+
+extern uint16_t *adc_value_pointer;
+extern uint16_t error_direction;
+
+Fixed32_19 error_previous = 0;
+Fixed32_19 output_previous = 0;
 
 /* USER CODE END EV */
 
@@ -153,8 +163,14 @@ void DMA1_Channel1_IRQHandler(void)
 
   /* USER CODE END DMA1_Channel1_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_adc);
-  /* USER CODE BEGIN DMA1_Channel1_IRQn 1 */
 
+  Fixed32_19 error = error_direction * (FP32_19_INT_TO_FP(*adc_value_pointer) - FP_ADC_TARGET);
+  Fixed32_19 output = output_previous + PID_A * error + PID_B * error_previous;
+  output_previous = output > OUTPUT_SAT ? OUTPUT_SAT : (output < - OUTPUT_SAT ? - OUTPUT_SAT: 0);
+  error_previous = error;
+  int16_t output_in_pwm_unit = (int16_t) (FP32_19_FP_TO_INT(output_previous));
+  TIM2->CCR1 =  FORWARD_SPEED < - output_in_pwm_unit ? 0 : (uint16_t)(FORWARD_SPEED + output_in_pwm_unit);
+  TIM2->CCR2 =  FORWARD_SPEED < output_in_pwm_unit ? 0 : (uint16_t)(FORWARD_SPEED - output_in_pwm_unit);
   /* USER CODE END DMA1_Channel1_IRQn 1 */
 }
 
@@ -167,7 +183,6 @@ void DMA1_Channel2_3_IRQHandler(void)
 
   /* USER CODE END DMA1_Channel2_3_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_i2c1_tx);
-  HAL_DMA_IRQHandler(&hdma_tim2_ch2);
   /* USER CODE BEGIN DMA1_Channel2_3_IRQn 1 */
 
   /* USER CODE END DMA1_Channel2_3_IRQn 1 */
@@ -181,7 +196,6 @@ void DMA1_Channel4_5_6_7_IRQHandler(void)
   /* USER CODE BEGIN DMA1_Channel4_5_6_7_IRQn 0 */
 
   /* USER CODE END DMA1_Channel4_5_6_7_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_tim2_ch1);
   HAL_DMA_IRQHandler(&hdma_i2c1_rx);
   /* USER CODE BEGIN DMA1_Channel4_5_6_7_IRQn 1 */
 
