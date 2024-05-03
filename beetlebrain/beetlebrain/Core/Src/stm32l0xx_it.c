@@ -61,9 +61,9 @@ extern DMA_HandleTypeDef hdma_i2c1_tx;
 extern const volatile adc_values_type adc_values;
 /* USER CODE BEGIN EV */
 
-#define PID_A FP32_19_FLOAT_TO_FP(KI*DT + KP)
-#define PID_B FP32_19_FLOAT_TO_FP(-KP)
-#define OUTPUT_SAT FP32_19_INT_TO_FP(PWM_PERIOD)
+#define PID_A FP32_19_FLOAT_TO_FP(0.20002)
+#define PID_B FP32_19_FLOAT_TO_FP(-0.2)
+#define OUTPUT_SAT FP32_19_INT_TO_FP(100)
 #define FP_ADC_TARGET FP32_19_INT_TO_FP(ADC_TARGET)
 
 extern uint16_t *adc_value_pointer;
@@ -162,16 +162,22 @@ void DMA1_Channel1_IRQHandler(void)
   /* USER CODE BEGIN DMA1_Channel1_IRQn 0 */
 
   /* USER CODE END DMA1_Channel1_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_adc);
+
 
   Fixed32_19 error = error_direction * (FP32_19_INT_TO_FP(*adc_value_pointer) - FP_ADC_TARGET);
   Fixed32_19 output = output_previous + PID_A * error + PID_B * error_previous;
   output_previous = output > OUTPUT_SAT ? OUTPUT_SAT : (output < - OUTPUT_SAT ? - OUTPUT_SAT: 0);
   error_previous = error;
   int16_t output_in_pwm_unit = (int16_t) (FP32_19_FP_TO_INT(output_previous));
-  TIM2->CCR1 =  FORWARD_SPEED < - output_in_pwm_unit ? 0 : (uint16_t)(FORWARD_SPEED + output_in_pwm_unit);
-  TIM2->CCR2 =  FORWARD_SPEED < output_in_pwm_unit ? 0 : (uint16_t)(FORWARD_SPEED - output_in_pwm_unit);
+
+  int16_t pwm1 = FORWARD_SPEED < - output_in_pwm_unit ? 0 : (uint16_t)(FORWARD_SPEED + output_in_pwm_unit);
+  int16_t pwm2 =  (FORWARD_SPEED < output_in_pwm_unit ? 0 : (uint16_t)(FORWARD_SPEED - output_in_pwm_unit));
+  TIM2->CCR1 = (uint16_t) pwm1;
+  TIM2->CCR2 = (uint16_t) pwm2;
   /* USER CODE END DMA1_Channel1_IRQn 1 */
+
+  hdma_adc.DmaBaseAddress->IFCR = (DMA_ISR_TCIF1 << (hdma_adc.ChannelIndex & 0x1cU));
+  __HAL_UNLOCK(&hdma_adc);
 }
 
 /**

@@ -1,5 +1,7 @@
+"./Core/Src/VL53L0x.o"
 "./Core/Src/custom_interrupt.o"
 "./Core/Src/main.o"
+"./Core/Src/millis.o"
 "./Core/Src/stm32l0xx_hal_msp.o"
 "./Core/Src/stm32l0xx_it.o"
 "./Core/Src/syscalls.o"

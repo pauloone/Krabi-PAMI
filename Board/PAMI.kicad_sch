@@ -4440,7 +4440,7 @@
     (property "Reference" "RQSL1" (at 191.77 134.62 90)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Value" "1k" (at 191.77 137.16 90)
+    (property "Value" "10k" (at 191.77 137.16 90)
       (effects (font (size 1.27 1.27)))
     )
     (property "Footprint" "Resistor_SMD:R_0603_1608Metric" (at 191.77 139.192 90)

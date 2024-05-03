@@ -1,0 +1,2 @@
+../Core/Src/millis.c:10:6:initMillis	0	static
+../Core/Src/millis.c:15:10:millis	8	static

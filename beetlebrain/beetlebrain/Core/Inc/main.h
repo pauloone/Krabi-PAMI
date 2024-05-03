@@ -33,14 +33,13 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include "custom_interrupt.h"
 #include "fixed_point.h"
-
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
 typedef union {
 	uint32_t dma_pointer;
-	uint16_t adc_values[2];
+	uint16_t adc_values[3];
 } adc_values_type;
 
 /* USER CODE END ET */
@@ -81,14 +80,10 @@ void Error_Handler(void);
 #define SWITCH_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-#define PWM_PERIOD 319 // 16Mhz/50kHz
-#define SENSOR_TARGET
-#define FORWARD_SPEED 300
-#define ADC_TARGET	2000
-
-#define KP 0.07
-#define KI 0.007
-#define DT 0.00002 // 1/50kHz
+#define PWM_PERIOD 319 // ((32Mhz/50kHz /2) - 1) divided by 2 because up down
+#define SENSOR_TARGET 200
+#define FORWARD_SPEED 250
+#define ADC_TARGET	950
 
 /* USER CODE END Private defines */
 
