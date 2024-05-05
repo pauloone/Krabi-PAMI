@@ -94,6 +94,7 @@ int main(void)
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
 
+
 	HAL_Init();
   //SET_BIT(RCC->APB1ENR, (RCC_APB1ENR_TIM2EN));
 
@@ -138,15 +139,15 @@ int main(void)
 //  setMeasurementTimingBudget( 100 * 1000UL );
 //  statInfo_t xTraStats;
 //  startContinuous(100);
-  GPIO_PinState RUN_state =  GPIO_PIN_SET;
-  while(RUN_state == GPIO_PIN_SET){
+  GPIO_PinState RUN_state =  GPIO_PIN_RESET;
+  while(RUN_state == GPIO_PIN_RESET){
 	  RUN_state = HAL_GPIO_ReadPin(RUN_GPIO_Port, RUN_Pin);
 //		readRangeContinuousMillimeters( &xTraStats );	// blocks until measurement is finished
 //		HAL_Delay(2);
   }
   // Start signal
 
-  HAL_Delay(90000);
+  HAL_Delay(1000);
   /* USER CODE END 3 */
   //Beginning of the PAMI allowed run period
   TIM2->CR1 |= TIM_CR1_CEN;

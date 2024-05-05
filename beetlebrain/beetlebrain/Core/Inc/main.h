@@ -82,8 +82,8 @@ void Error_Handler(void);
 /* USER CODE BEGIN Private defines */
 #define PWM_PERIOD 319 // ((32Mhz/50kHz /2) - 1) divided by 2 because up down
 #define SENSOR_TARGET 200
-#define FORWARD_SPEED 250
-#define ADC_TARGET	950
+#define FORWARD_SPEED 300
+#define ADC_TARGET	817
 
 /* USER CODE END Private defines */
 

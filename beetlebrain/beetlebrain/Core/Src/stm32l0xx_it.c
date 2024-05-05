@@ -60,9 +60,8 @@ extern DMA_HandleTypeDef hdma_i2c1_rx;
 extern DMA_HandleTypeDef hdma_i2c1_tx;
 extern const volatile adc_values_type adc_values;
 /* USER CODE BEGIN EV */
-
-#define PID_A FP32_19_FLOAT_TO_FP(0.20002)
-#define PID_B FP32_19_FLOAT_TO_FP(-0.2)
+#define PID_A FP32_19_FLOAT_TO_FP(0.10005)
+#define PID_B FP32_19_FLOAT_TO_FP(-0.1)
 #define OUTPUT_SAT FP32_19_INT_TO_FP(100)
 #define FP_ADC_TARGET FP32_19_INT_TO_FP(ADC_TARGET)
 
