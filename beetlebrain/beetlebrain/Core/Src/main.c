@@ -18,7 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "VL53L0X.h"
+//#include "VL53L0X.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -126,7 +126,7 @@ int main(void)
   }
 
   adc_value_pointer = &adc_values.adc_values[0];
-  other_adc_value_pointer = &adc_values.adc_values[0];
+  other_adc_value_pointer = &adc_values.adc_values[1];
 
   /* USER CODE END 2 */
 
@@ -147,7 +147,7 @@ int main(void)
   }
   // Start signal
 
-  HAL_Delay(1000);
+  HAL_Delay(90000);
   /* USER CODE END 3 */
   //Beginning of the PAMI allowed run period
   TIM2->CR1 |= TIM_CR1_CEN;

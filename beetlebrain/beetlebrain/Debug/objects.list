@@ -1,4 +1,3 @@
-"./Core/Src/VL53L0x.o"
 "./Core/Src/custom_interrupt.o"
 "./Core/Src/main.o"
 "./Core/Src/millis.o"

@@ -39,7 +39,7 @@ extern "C" {
 /* USER CODE BEGIN ET */
 typedef union {
 	uint32_t dma_pointer;
-	uint16_t adc_values[3];
+	uint16_t adc_values[2];
 } adc_values_type;
 
 /* USER CODE END ET */
